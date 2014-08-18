@@ -10,6 +10,8 @@ window.addEvent('domready', function(){
     var groupID = $(fbGroupIdElement).value;
     var defaultSelectList = $(fbGroupsElement).get('html');  
     var groups = new Array();
+    var grantType = 'publish_actions, manage_pages';
+    var requestUrl = 'https://graph.facebook.com/me/groups';
     var setPageSelection = function(){
         if(groupID === ''){
             groupID = $(fbGroupsElement).get('value');
@@ -51,9 +53,9 @@ window.addEvent('domready', function(){
     var evalResponse = function(response, context){
         var resAsText = 'response from ' + context + ': ';
         $each(response, function(value, key){
-            if(typeOf(value) == 'object'){
+            if(typeOf(value) === 'object'){
                 $each(value, function(objVal, objKey){
-                    if(typeOf(objVal) == 'object'){
+                    if(typeOf(objVal) === 'object'){
                         $each(objVal, function(obj2Val, obj2Key){
                             resAsText += 'Obj2[ ' +obj2Key + '] = '+ obj2Val + ' ';
                         });
@@ -70,18 +72,18 @@ window.addEvent('domready', function(){
      * AJAX method for retrieving groups
      */
     var requestPages = function(){
-        if($(accessTokenElement).value == ''){
+        if($(accessTokenElement).value === ''){
             $(fbGroupsElement).set('html', defaultSelectList);
             return;
         }
         // FOR DEBUGGING
         //alert('https://graph.facebook.com/me/accounts?' + 'access_token=' + $(accessTokenElement).value + '&grant_type=manage_groups' );
         var pageRequest = new Request.JSONP({
-            url: 'https://graph.facebook.com/me/groups',
+            url: requestUrl,
             method: 'post',
             data:{
                 'access_token': $(accessTokenElement).value,
-                'grant_type': 'publish_actions, manage_pages'
+                'grant_type': grantType
             },
             onRequest: function(){
                 $(fbGroupsElement).set('class', 'readonly ajaxloader');
