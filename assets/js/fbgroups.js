@@ -81,7 +81,7 @@ window.addEvent('domready', function(){
             method: 'post',
             data:{
                 'access_token': $(accessTokenElement).value,
-                'grant_type': 'user_groups'
+                'grant_type': 'publish_actions, manage_pages'
             },
             onRequest: function(){
                 $(fbGroupsElement).set('class', 'readonly ajaxloader');
