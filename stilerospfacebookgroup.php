@@ -16,11 +16,11 @@ if(!defined('DS')){
 }
 
 define('PATH_FACEBOOK_LIBRARY', dirname(__FILE__).DS.'library'.DS);
-JLoader::discover('StileroSPFBGroup', PATH_FACEBOOK_LIBRARY, false, true);
-JLoader::discover('StileroSPFBGroup', PATH_FACEBOOK_LIBRARY, false, true);
-JLoader::discover('StileroSPFBGroupOauth', PATH_FACEBOOK_LIBRARY.'fblibrary'.DS.'fboauth'.DS);
-JLoader::discover('StileroSPFBGroupOauth', PATH_FACEBOOK_LIBRARY.'fblibrary'.DS.'oauth'.DS);
-JLoader::discover('StileroSPFBGroupEndpoint', PATH_FACEBOOK_LIBRARY, false, true);
+JLoader::discover('StileroSPFB', PATH_FACEBOOK_LIBRARY, false, true);
+JLoader::discover('StileroSPFB', PATH_FACEBOOK_LIBRARY, false, true);
+JLoader::discover('StileroSPFBOauth', PATH_FACEBOOK_LIBRARY.'fblibrary'.DS.'fboauth'.DS);
+JLoader::discover('StileroSPFBOauth', PATH_FACEBOOK_LIBRARY.'fblibrary'.DS.'oauth'.DS);
+JLoader::discover('StileroSPFBEndpoint', PATH_FACEBOOK_LIBRARY, false, true);
 JLoader::register('SocialpromoterImporter', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_socialpromoter'.DS.'helpers'.DS.'importer.php');
 JLoader::register('SocialpromoterPosttype', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_socialpromoter'.DS.'library'.DS.'posttype.php');
 jimport('joomla.event.plugin');
@@ -29,7 +29,7 @@ class plgSocialpromoterStilerospfacebookgroup extends JPlugin {
     protected $Facebook;
     protected $AccessToken;
     protected $Feed;
-    protected $pageId;
+    protected $groupId;
     protected $adminId;
     protected $_appId;
     protected $_appSecret;
@@ -55,7 +55,7 @@ class plgSocialpromoterStilerospfacebookgroup extends JPlugin {
      */
     protected function setParams(){
         if(!isset($this->params)){
-            $plg = JPluginHelper::getPlugin('socialpromoter', 'stilerospfacebook');
+            $plg = JPluginHelper::getPlugin('socialpromoter', 'stilerospfacebookgroup');
             $plg_params = new JRegistry();
             $plg_params->loadString($plg->params);
             $this->params = $plg_params;
@@ -73,18 +73,20 @@ class plgSocialpromoterStilerospfacebookgroup extends JPlugin {
      * with the admin id, and if they mat
      * @return boolean true if personal post
      */
-    protected function isPersonalPost(){
+    
+    //protected function isPersonalPost(){
+            /*
             $this->Facebook->User->setUserId('me');
             $me = $this->Facebook->User->me();
             $user = StileroSPFBOauthResponse::handle($me);
-            if($user->id == $this->pageId){
-                $this->Facebook->Photos->setUserId('me');
+            if($user->id == $this->pageId){*/
+            /*    $this->Facebook->Photos->setUserId('me');
                 $this->params->set('fb_pages', '');
                 StileroSPFBPluginparamshelper::storeParams($this->params, 'autofbook');
                 return true;
-            }
+            //}
     }
-    
+    */
     /**
      * Wraps up after a call. Shows messages and updates tokens
      * @param string $response JSON response from FB
@@ -104,10 +106,10 @@ class plgSocialpromoterStilerospfacebookgroup extends JPlugin {
      * Prepares for a FB Page call
      */
     protected function initFBPageCall(){
-        $response = $this->Facebook->User->getTokenForPageWithId($this->pageId);
-        $this->_fbpageAuthToken = StileroSPFBOauthResponse::handle($response);
-        $this->Facebook->Photos->setToken($this->_fbpageAuthToken);
-        $this->Facebook->Photos->setUserId($this->pageId);
+        //$response = $this->Facebook->User->getTokenForPageWithId($this->pageId);
+        //$this->_fbpageAuthToken = StileroSPFBOauthResponse::handle($response);
+        $this->Facebook->Photos->setToken($this->_authToken);
+        $this->Facebook->Photos->setUserId($this->groupId);
     }
     
     public function postImage($url, $title='', $description='', $tags=''){
@@ -123,15 +125,17 @@ class plgSocialpromoterStilerospfacebookgroup extends JPlugin {
 //        }else{
 //            $this->Facebook->Photos->setUserId('me');
 //        }
+        /*
         if($this->pageId != ''){
             $token = $this->Facebook->User()->getTokenForPageWithId($this->pageId);
             $this->_authToken = $token;
             $this->Facebook->Photos()->setToken($token);
-        }
+        }*/
         $caption = $title.' - '.$description.$this->_desc_suffix.' '.$tags;
 //        $response = $this->Facebook->Photos->publishFromUrl($url, $caption);
-        $response = $this->Facebook->Photos()->publishFromUrl($url, $caption);
+        $response = $this->Facebook->Photos()->publishFromUrl($url, $caption, '', '', $this->groupId);
         //exit;
+        
         return $this->wrapUp($response);
     }
     /**

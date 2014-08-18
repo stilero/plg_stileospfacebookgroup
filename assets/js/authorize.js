@@ -8,7 +8,7 @@
 * @license    GPLv2
 */
 window.addEvent('domready', function(){
-    var grantType = 'user_groups';
+    var grantType = 'publish_stream,share_item,offline_access,manage_pages,user_groups,user_status';
     //var grantType = 'publish_stream';
     var requestUrl = 'https://www.facebook.com/dialog/oauth';
     var appID = $(appIdElement).value;
