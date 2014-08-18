@@ -11,14 +11,14 @@ window.addEvent('domready', function(){
     var defaultSelectList = $(fbGroupsElement).get('html');  
     var groups = new Array();
     var setPageSelection = function(){
-        if(groupID == ''){
+        if(groupID === ''){
             groupID = $(fbGroupsElement).get('value');
         }
         $(fbGroupIdElement).value = groupID;
     };
     
     var handlePageResponse = function(response){
-        if(response.data == 'undefined'){
+        if(response.data === 'undefined'){
             var errormsg = '(' + response.code + ')' +
                 response.type + '\n' +
                 response.message;
@@ -32,7 +32,7 @@ window.addEvent('domready', function(){
 //                    alert(value.id);
 //                });
             response.data.each(function(value, key){
-                var selected = (value.id == groupID) ? ' selected="selected" ' : '';
+                var selected = (value.id === groupID) ? ' selected="selected" ' : '';
                 //if(value.category != 'Application'){
                     //groups[value.id] = value.access_token;
                     options = options + '<option value="' + value.id + '"'+selected+'>' + value.name + '</option>';

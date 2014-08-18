@@ -39,7 +39,7 @@ window.addEvent('domready', function(){
      */
     var clearAuthorization = function(){
         $(authCodeElement).value = '';
-        $(fbPageIdElement).value = '';
+        $(fbGroupIdElement).value = '';
         $(accessTokenElement).value = '';
         $(authorizeElement).innerHTML = 'Connect to FB';
         setButtonHref();
