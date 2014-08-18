@@ -10,7 +10,7 @@ window.addEvent('domready', function(){
     var groupID = $(fbGroupIdElement).value;
     var defaultSelectList = $(fbGroupsElement).get('html');  
     var groups = new Array();
-    var grantType = 'publish_actions, manage_pages';
+    var grantType = 'manage_pages';
     var requestUrl = 'https://graph.facebook.com/me/groups';
     var setPageSelection = function(){
         if(groupID === ''){

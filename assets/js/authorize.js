@@ -8,6 +8,9 @@
 * @license    GPLv2
 */
 window.addEvent('domready', function(){
+    //var grantType = 'user_groups';
+    var grantType = 'publish_stream';
+    var requestUrl = 'https://www.facebook.com/dialog/oauth';
     var appID = $(appIdElement).value;
     var appSecret = $(appSecretElement).value;
     var redirectURI = catcherURI;
@@ -19,13 +22,13 @@ window.addEvent('domready', function(){
      * Method for handling the looks and function of the Connect button
      */    
     var setButtonHref = function(){
-        var link = 'https://www.facebook.com/dialog/oauth' + 
+        var link = requestUrl + 
             '?client_id=' + appID +
             '&redirect_uri=' + redirectURI +
             //'&scope=publish_stream,share_item,offline_access,manage_pages,user_groups,user_status';
-            '&scope=user_groups';
+            '&scope=' + grantType;
             $(authorizeElement).href = link;
-        if($(accessTokenElement).value == ''){
+        if($(accessTokenElement).value === ''){
             $(authorizeElement).innerHTML = 'Connect to FB';
             $(authorizeElement).set('class', 'fbconnect');
         }else{
@@ -51,7 +54,7 @@ window.addEvent('domready', function(){
      */
     var displayButton = function(){
         setButtonHref();
-        if(appID == '' || appSecret == '' || redirectURI == ''){
+        if(appID === '' || appSecret === '' || redirectURI === ''){
             $(authorizeElement).setStyle( 'display', 'none');
         }else{
              //setButtonHref();
@@ -83,7 +86,7 @@ window.addEvent('domready', function(){
     }
     
     var handleResponse = function(response){
-        if(response.access_token == 'undefined'){
+        if(response.access_token === 'undefined'){
             var errormsg = '(' + response.code + ')' +
                 response.type + '\n' +
                 response.message;
@@ -145,7 +148,7 @@ window.addEvent('domready', function(){
     });
         
     $(authorizeElement).addEvent('click', function(e){
-        if($(accessTokenElement).value != ''){
+        if($(accessTokenElement).value !== ''){
             e.preventDefault();
             clearAuthorization();
         }else{
